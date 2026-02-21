@@ -38,7 +38,8 @@ jobs:
           npm ci \
             --prefer-offline \
             --no-audit \
-            --no-fund
+            --no-fund \
+            --legacy-peer-deps
       - name: ⚡ Build Vite app
         run: npm run build
         env:
