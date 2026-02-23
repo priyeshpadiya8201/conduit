@@ -8,12 +8,7 @@ import App from './App'
 import makeServer from './server'
 
 // ✅ FIX 1: Set axios baseURL based on environment
-if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'https://api.realworld.io/api'
-} else if (process.env.NODE_ENV === 'development') {
-  // In development, use relative URLs (Mirage will intercept)
-  axios.defaults.baseURL = ''
-}
+axios.defaults.baseURL = ''
 
 // Default query function for React Query
 const defaultQueryFn = async ({ queryKey }) => {
@@ -32,17 +27,19 @@ const queryClient = new QueryClient({
 })
 
 // ✅ FIX 2: Reorder conditions - Development FIRST
-if (process.env.NODE_ENV === 'development') {
-  makeServer({ environment: 'development' })
-} else if (window.Cypress && process.env.NODE_ENV === 'test') {
+// @ts-ignore - Cypress injects properties into the window object during tests
+if (window['Cypress'] && import.meta.env.MODE === 'test') {
   const cyServer = createServer({
     routes() {
       ;['get', 'put', 'patch', 'post', 'delete'].forEach((method) => {
-        this[method]('/*', (schema, request) => window.handleFromCypress(request))
+        // @ts-ignore - Ignore TS complaining about custom Cypress properties on window
+        this[method]('/*', (schema, request) => window['handleFromCypress'](request))
       })
     },
   })
   cyServer.logging = false
+} else {
+  makeServer({ environment: import.meta.env.MODE })
 }
 
 // ✅ Render React app AFTER Mirage is initialized

@@ -20,7 +20,7 @@ const limit = 10
 function ArticleList({ filters = initialFilters }) {
   const [offset, setOffset] = React.useState(0)
   const { data, isFetching, isError, isSuccess } = useArticlesQuery({ filters: { ...filters, offset } })
-  const pages = Math.ceil(data.articlesCount / limit)
+  const pages = Math.ceil((data?.articlesCount || 0) / limit)
 
   useDeepCompareEffect(() => {
     if (!isNil(filters.offset)) {
