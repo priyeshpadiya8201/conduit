@@ -30,7 +30,7 @@ jobs:
       - name: ⚡ Setup Node.js with cache
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
       
       # ✅ FIX 1: Add --legacy-peer-deps for Cypress version conflict
