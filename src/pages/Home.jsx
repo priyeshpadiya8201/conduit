@@ -59,7 +59,7 @@ function Home() {
                     })}
                     onClick={onGlobalFeedClick}
                   >
-                    Global Feed
+                    Global New Feed
                   </button>
                 </li>
                 {filters?.tag && (
